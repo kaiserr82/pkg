@@ -1,0 +1,10 @@
+[package]
+name = "pkg"
+version = "0.2.0"
+edition = "2021"
+
+[dependencies]
+which = "6"
+dialoguer = "0.11"
+tokio = { version = "1", features = ["full"] }
+fuzzy-matcher = "0.3"
