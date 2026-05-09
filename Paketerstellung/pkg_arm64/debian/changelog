@@ -1,0 +1,11 @@
+pkg (1.2-1) UNRELEASED; urgency=medium
+
+  * Realer Paketname (nicht bereinigt) bei Install, Update und Remove anzeigen.
+
+ -- Rene Kaiser <renekaiser@disroot.org>  Wed, 09 May 2026 11:38:28 +0200
+
+pkg (1.1-1) unstable; urgency=medium
+
+  * Liste installierte Pakete auf.
+
+ -- Rene Kaiser <renekaiser@disroot.org>  Tue, 08 May 2026 10:00:00 +0200

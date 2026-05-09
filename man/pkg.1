@@ -1,0 +1,258 @@
+.TH PKG 1 "2026-05-07" "pkg 0.2.0" "Unified Package Manager"
+
+.SH NAME
+pkg \- einheitliche CLI für mehrere Linux-Paketmanager
+
+.SH SYNOPSIS
+.B pkg
+[\fIOPTION\fR] <command> [packages...]
+
+.SH DESCRIPTION
+\fBpkg\fR ist ein einheitlicher Paketmanager-Wrapper für verschiedene Linux-
+Paketmanager wie:
+
+.IP \(bu 2
+apt
+.IP \(bu 2
+pacman
+.IP \(bu 2
+yay
+.IP \(bu 2
+flatpak
+.IP \(bu 2
+dnf
+.IP \(bu 2
+zypper
+
+Das Programm bietet:
+
+.IP \(bu 2
+Parallele Paket-Suche
+.IP \(bu 2
+Fuzzy-Matching
+.IP \(bu 2
+Automatische Paket-Rangfolge
+.IP \(bu 2
+Distro-basierte Priorisierung
+.IP \(bu 2
+Interaktive Auswahl
+.IP \(bu 2
+Installieren / Entfernen / Updaten
+.IP \(bu 2
+Auflisten installierter Pakete
+
+.SH COMMANDS
+
+.TP
+.B search, s
+Sucht nach Paketen über alle verfügbaren Paketmanager.
+
+Beispiel:
+.EX
+pkg search firefox
+pkg s fastfetch
+.EE
+
+Mehrere Pakete:
+.EX
+pkg search firefox vlc git
+.EE
+
+Features:
+.IP \(bu 2
+Case-insensitive Suche
+.IP \(bu 2
+Fuzzy Matching
+.IP \(bu 2
+Exakte Treffer werden priorisiert
+.IP \(bu 2
+Hauptprogramme werden bevorzugt
+.IP \(bu 2
+Sprachpakete und Libraries werden niedriger gewichtet
+
+.TP
+.B install, i
+Installiert ein oder mehrere Pakete.
+
+Beispiel:
+.EX
+pkg install firefox
+pkg i fastfetch neovim git
+.EE
+
+Vor der Installation:
+.IP \(bu 2
+Wird geprüft ob Paket existiert
+.IP \(bu 2
+Wird nach Bestätigung gefragt
+.IP \(bu 2
+Wird bester Paketmanager gewählt
+
+.TP
+.B remove, r
+Entfernt installierte Pakete.
+
+Beispiel:
+.EX
+pkg remove firefox
+pkg r fastfetch
+.EE
+
+Vor dem Entfernen:
+.IP \(bu 2
+Wird geprüft ob Paket installiert ist
+.IP \(bu 2
+Bestätigung erforderlich
+
+.TP
+.B update, u
+Führt Systemupdates über alle verfügbaren Paketmanager aus.
+
+Beispiel:
+.EX
+pkg update
+pkg u
+.EE
+
+Dies führt typischerweise aus:
+.IP \(bu 2
+apt update && upgrade
+.IP \(bu 2
+pacman -Syu
+.IP \(bu 2
+yay -Syu
+.IP \(bu 2
+flatpak update
+
+.TP
+.B list, l
+Listet installierte Pakete auf.
+
+Beispiel:
+.EX
+pkg list
+.EE
+
+Nach Paket filtern:
+.EX
+pkg list firefox
+pkg l fastfetch
+.EE
+
+.TP
+.B version, v
+Zeigt die Programmversion an.
+
+Beispiel:
+.EX
+pkg version
+pkg -v
+.EE
+
+.SH PACKAGE RANKING
+
+\fBpkg\fR bewertet Suchergebnisse automatisch.
+
+Prioritäten:
+
+.IP "1." 4
+Exakte Übereinstimmung
+.IP "2." 4
+Beginnt mit Suchbegriff
+.IP "3." 4
+Enthält Suchbegriff
+.IP "4." 4
+Fuzzy-Match Qualität
+.IP "5." 4
+Passender Paketmanager zur Distribution
+.IP "6." 4
+Pakettyp
+
+.SH PACKAGE TYPES
+
+Pakete werden automatisch klassifiziert:
+
+.TP
+.B Hauptprogramme
+Werden bevorzugt angezeigt.
+
+.TP
+.B Plugins/Addons
+Niedrigere Priorität.
+
+.TP
+.B Libraries/SDKs
+Mittlere Priorität.
+
+.TP
+.B Sprachpakete
+Werden meist ans Ende sortiert.
+
+.SH DISTRO PRIORITY
+
+Je nach Linux-Distribution werden Paketmanager unterschiedlich priorisiert.
+
+.SS Arch Linux
+.IP \(bu 2
+pacman
+.IP \(bu 2
+yay
+.IP \(bu 2
+flatpak
+
+.SS Ubuntu/Debian
+.IP \(bu 2
+apt
+.IP \(bu 2
+flatpak
+
+.SH FILES
+
+.TP
+.I /etc/os-release
+Wird genutzt zur Distributions-Erkennung.
+
+.SH EXAMPLES
+
+Suche nach einem Paket:
+.EX
+pkg s firefox
+.EE
+
+Installiere mehrere Programme:
+.EX
+pkg i firefox vlc git
+.EE
+
+Liste installierte Pakete:
+.EX
+pkg l
+.EE
+
+Liste installierte Firefox-Pakete:
+.EX
+pkg l firefox
+.EE
+
+Update aller Manager:
+.EX
+pkg u
+.EE
+
+.SH EXIT STATUS
+
+.TP
+.B 0
+Erfolg
+
+.TP
+.B 1
+Fehler
+
+.SH Entwickler Rene Kaiser
+
+Entwickelt in Rust.
+
+.SH Lizenz
+
+MIT

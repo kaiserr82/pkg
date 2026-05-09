@@ -1,0 +1,24 @@
+pkgname=pkg
+pkgver=1.2.0
+pkgrel=1
+pkgdesc='pkg'
+license=('custom:BSD')
+arch=('i686' 'x86_64')
+depends=('rust')
+
+source=(
+    'pkg-bin'
+    'pkg.1'
+)
+
+sha256sums=('SKIP' 'SKIP')
+
+package() {
+    cd "$srcdir"
+
+    install -Dm755 pkg-bin \
+        "$pkgdir/usr/bin/pkg"
+
+    install -Dm644 pkg.1 \
+        "$pkgdir/usr/share/man/man1/pkg.1"
+}

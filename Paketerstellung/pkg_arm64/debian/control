@@ -1,0 +1,11 @@
+Source: pkg
+Section: utils
+Priority: optional
+Maintainer: Rene Kaiser renekaiser@disroot.org
+Standards-Version: 1.2.0
+Build-Depends: debhelper-compat (= 13)
+
+Package: pkg
+Architecture: amd64 arm64
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Installer für verschiedene Linux Architekturen. Mapper für Paketinstaller.

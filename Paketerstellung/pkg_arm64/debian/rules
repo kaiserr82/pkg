@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_install:
+	mkdir -p debian/pkg/usr/bin
+	mkdir -p debian/pkg/usr/share/man/man1
+
+	install -m 0755 pkg debian/pkg/usr/bin/pkg; \
+	install -m 0644 pkg.1 debian/pkg/usr/share/man/man1/pkg.1

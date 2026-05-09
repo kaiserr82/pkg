@@ -5,7 +5,6 @@ use fuzzy_matcher::skim::SkimMatcherV2;
 /// Kategorien für Paketbewertung
 #[derive(PartialEq, Eq, PartialOrd, Ord)]
 pub enum PackageType {
-    MainApp,
     Plugin,
     Library,
     LanguagePack,
@@ -47,15 +46,6 @@ pub fn classify_package(name: &str) -> PackageType {
         return PackageType::Plugin;
     }
 
-    // Core Apps
-    if name.contains("firefox")
-        || name.contains("chrome")
-        || name.contains("vim")
-        || name.contains("nano")
-    {
-        return PackageType::MainApp;
-    }
-
     PackageType::Other
 }
 
@@ -69,7 +59,6 @@ pub fn classify_package(name: &str) -> PackageType {
 /// - LanguagePack: sehr niedrig (soll meist nach unten)
 pub fn type_priority(t: &PackageType) -> i64 {
     match t {
-        PackageType::MainApp => 1000,
         PackageType::Other => -500,
         PackageType::Plugin => 100,
         PackageType::Library => 200,

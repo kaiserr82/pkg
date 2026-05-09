@@ -17,14 +17,19 @@ pub type Cache = Arc<Mutex<HashMap<String, Vec<UnifiedPackage>>>>;
 /// Einheitliche Darstellung eines Paket-Treffers
 #[derive(Debug, Clone)]
 pub struct UnifiedPackage {
-    /// Paketname
+    /// Normalisierter Anzeigename (für Vergleich und Ausgabe)
     pub name: String,
+
+    /// Originalname des Pakets, wie er vom Paketmanager geliefert wurde.
+    /// Dieser Name sollte für install/remove verwendet werden.
+    pub real_name: String,
+
     /// Paketmanager, der dieses Paket liefert
     pub manager: String,
+
     /// Fuzzy-Matching Score (höher = besser)
     pub score: i64,
 }
-
 
 /// Führt eine parallele Suche über alle Paketmanager aus
 /// und nutzt einen Cache zur Performance-Optimierung
@@ -33,16 +38,15 @@ pub async fn unified_search_cached(
     pkg: &str,
     cache: Cache,
 ) -> Vec<UnifiedPackage> {
-
     // --- Cache Check ---
     {
         let c = cache.lock().unwrap();
-        if let Some(v) = c.get(pkg) {
+        if let Some(v) = c.get(&pkg.to_lowercase()) {
             return v.clone();
         }
     }
 
-    // --- parallele Suche starten ---
+    // --- Parallele Suche starten ---
     let mut handles = Vec::new();
 
     for m in managers.iter().cloned() {
@@ -63,10 +67,14 @@ pub async fn unified_search_cached(
     }
 
     // --- Duplikate entfernen ---
+    // Schlüssel: manager + normalisierter Name
+    // Dadurch bleiben identische Pakete aus verschiedenen Managern erhalten.
     let mut map: HashMap<String, UnifiedPackage> = HashMap::new();
 
     for p in all {
-        map.entry(p.name.clone())
+        let key = format!("{}:{}", p.manager, p.name.to_lowercase());
+
+        map.entry(key)
             .and_modify(|e| {
                 if p.score > e.score {
                     *e = p.clone();
@@ -89,12 +97,13 @@ pub async fn unified_search_cached(
 
         (
             type_priority(&a_type),
-            a.score + a_lang
+            a.score + a_lang,
         )
         .cmp(&(
             type_priority(&b_type),
-            b.score + b_lang
+            b.score + b_lang,
         ))
+        .reverse()
     });
 
     // --- Cache speichern ---
