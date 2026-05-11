@@ -1,7 +1,7 @@
-.TH PKG 1 "2026-05-07" "pkg 0.2.0" "Unified Package Manager"
+.TH PKG 1 "2026-05-1" "pkg 1.3.0" "Package Manager"
 
 .SH NAME
-pkg \- einheitliche CLI für mehrere Linux-Paketmanager
+pkg \- einheitlicher Paketmanager-Wrapper für mehrere Linux-Paketmanager
 
 .SH SYNOPSIS
 .B pkg
@@ -58,18 +58,6 @@ Mehrere Pakete:
 pkg search firefox vlc git
 .EE
 
-Features:
-.IP \(bu 2
-Case-insensitive Suche
-.IP \(bu 2
-Fuzzy Matching
-.IP \(bu 2
-Exakte Treffer werden priorisiert
-.IP \(bu 2
-Hauptprogramme werden bevorzugt
-.IP \(bu 2
-Sprachpakete und Libraries werden niedriger gewichtet
-
 .TP
 .B install, i
 Installiert ein oder mehrere Pakete.
@@ -125,6 +113,24 @@ yay -Syu
 flatpak update
 
 .TP
+.B clean, c
+Führt aufräumarbeiten über alle verfügbaren Paketmanager aus.
+
+Beispiel:
+.EX
+pkg clean
+pkg c
+.EE
+
+Dies führt typischerweise aus:
+.IP \(bu 2
+apt autoremove
+.IP \(bu 2
+pacman -Scc
+.IP \(bu 2
+yay -Scc
+
+.TP
 .B list, l
 Listet installierte Pakete auf.
 
@@ -167,26 +173,6 @@ Fuzzy-Match Qualität
 Passender Paketmanager zur Distribution
 .IP "6." 4
 Pakettyp
-
-.SH PACKAGE TYPES
-
-Pakete werden automatisch klassifiziert:
-
-.TP
-.B Hauptprogramme
-Werden bevorzugt angezeigt.
-
-.TP
-.B Plugins/Addons
-Niedrigere Priorität.
-
-.TP
-.B Libraries/SDKs
-Mittlere Priorität.
-
-.TP
-.B Sprachpakete
-Werden meist ans Ende sortiert.
 
 .SH DISTRO PRIORITY
 

@@ -93,6 +93,22 @@ impl Manager {
         }
     }
 
+    /// Cleanup
+    pub async fn cleanup(&self) {
+        let cmd = match self.name {
+            "apt" => Command::new("sudo").args(["apt", "autoremove"]).spawn(),
+            "pacman" => Command::new("sudo").args(["pacman", "-Scc"]).spawn(),
+            "yay" => Command::new("yay").args(["-Scc"]).spawn(),
+            "dnf" => Command::new("sudo").args(["dnf", "autoremove"]).spawn(),
+            "zypper" => Command::new("sudo").args(["zypper", "remove --clean-deps"]).spawn(),
+            _ => return,
+        };
+
+        if let Ok(mut c) = cmd {
+            let _ = c.wait().await;
+        }
+    }
+
     /// Aktualisiert ein einzelnes Paket
     pub async fn upgrade_package(&self, pkg: &str) {
         let cmd = match self.name {
@@ -231,7 +247,7 @@ impl Manager {
         };
 
         let text = String::from_utf8_lossy(&out.stdout);
-        text.to_lowercase().contains(&pkg.to_lowercase())
+        text.to_lowercase().eq(&pkg.to_lowercase())
     }
 
     //Liste pakete auf die installiert sind

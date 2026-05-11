@@ -368,6 +368,24 @@ async fn main() {
             }
         }
 
+        // =========================
+        // Clean
+        // =========================
+        "clean" | "c" | "-c" | "-clean" => {
+            if confirm_action("Paketmanager aufräumnen?") {
+                println!("Aufräumen der Paketmanager:\n");
+
+                for manager in &managers {
+
+                    manager.cleanup().await;
+                    println!("{} wurde abgeschlossen.\n", manager.name);
+                }
+            }
+            else {
+                println!("Abgebrochen.");
+            }
+        }
+
         _ => println!("Unbekannter Befehl"),
     }
 }
